@@ -18,7 +18,7 @@ public class Actor : MonoBehaviour, IDamageable
         _body = GetComponent<Rigidbody2D>();
     }
 
-    public void FixedUpdate()
+    void FixedUpdate()
     {
         _body.AddForce(_moveDir * _speed);
     }
