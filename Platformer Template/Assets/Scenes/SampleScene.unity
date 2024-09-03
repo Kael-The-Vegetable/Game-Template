@@ -391,7 +391,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!70 &1272280736
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -506,6 +506,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ab6134b71adc040ba4ac6ad4faad48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveDir: {x: 0, y: 0}
+  _speed: 10
+  _body: {fileID: 0}
 --- !u!114 &1272280740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +535,19 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1272280739}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: MoveControl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: c78fdc87-c5c6-4ca4-887d-fca9f9ebeb09
     m_ActionName: Player/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   m_NeverAutoSwitchControlSchemes: 0
