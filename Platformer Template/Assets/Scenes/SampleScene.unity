@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 1248407111}
   - component: {fileID: 1248407110}
   - component: {fileID: 1248407109}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -377,10 +377,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 4
+  m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: 2652266f32e48404c97a17d05d5adb32, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -508,8 +508,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _body: {fileID: 0}
   _moveDir: {x: 0, y: 0}
-  _speed: 40
-  _jumpForce: 10
+  _speed: 80
+  _maxSpeed: 5
+  _jumpForce: 20
+  _isGrounded: 0
+  _groundCastPosition: {x: -0.5, y: -1.2}
+  _groundCastLength: {x: 1, y: 0}
+  _nameOfGroundLayer: Ground
 --- !u!114 &1272280740
 MonoBehaviour:
   m_ObjectHideFlags: 0

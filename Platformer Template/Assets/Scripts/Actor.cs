@@ -12,12 +12,12 @@ public class Actor : MonoBehaviour, IDamageable
     [SerializeField] protected Vector2 _moveDir = Vector2.zero;
     [SerializeField] protected float _speed = 0;
 
-    void Awake()
+    public virtual void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
     }
 
-    void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         _body.AddForce(_moveDir * _speed);
     }
