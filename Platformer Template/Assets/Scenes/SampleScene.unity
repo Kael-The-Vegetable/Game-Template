@@ -241,7 +241,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1248407108}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: f5ae149dfbcc3f44e9d66eca4b8236f6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -339,7 +339,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.8504, y: -4.5123, z: 0}
-  m_LocalScale: {x: 19.407358, y: 1.1769897, z: 1}
+  m_LocalScale: {x: 190, y: 1.1769897, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -380,8 +380,8 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_GravityScale: 4
+  m_Material: {fileID: 6200000, guid: 2652266f32e48404c97a17d05d5adb32, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -506,9 +506,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7ab6134b71adc040ba4ac6ad4faad48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveDir: {x: 0, y: 0}
-  _speed: 10
   _body: {fileID: 0}
+  _moveDir: {x: 0, y: 0}
+  _speed: 40
+  _jumpForce: 10
 --- !u!114 &1272280740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,6 +551,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: c78fdc87-c5c6-4ca4-887d-fca9f9ebeb09
     m_ActionName: Player/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1272280739}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: JumpControl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 25b60458-e3cd-4d9d-bc66-a9de00227548
+    m_ActionName: Player/Jumping[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
