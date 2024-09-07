@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Singleton : MonoBehaviour
 {
+    // this static member allows every script in the project to access these variables and anything that is public in the children. an example of this is Singleton.Global.Game.Gravity or something.
     public static Singleton Global { get; private set; }
     
     public GameManager Game { get; private set; }
