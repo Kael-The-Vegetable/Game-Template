@@ -16,7 +16,7 @@ public class PlayerController : Actor
     [SerializeField] private string _nameOfGroundLayer = "Ground";
     [SerializeField, Min(0)] private float _fallingGravityMultiplier = 2;
     [SerializeField, Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")] private float _landingJumpInputTime = 0.1f;
-
+    [SerializeField] private bool _holdForHigherJumps = true;
     private int _groundLayer;
 
     private float _defaultGravityScale;
@@ -89,7 +89,7 @@ public class PlayerController : Actor
             LandingJumpInputTimer = _landingJumpInputTime;
         }
 
-        if (context.canceled)
+        if (context.canceled && _holdForHigherJumps)
         {
             LandingJumpInputTimer = 0;
             if (_body.velocity.y > 0)

@@ -517,6 +517,7 @@ MonoBehaviour:
   _nameOfGroundLayer: Ground
   _fallingGravityMultiplier: 2
   _landingJumpInputTime: 0.5
+  _holdForHigherJumps: 0
 --- !u!114 &1272280740
 MonoBehaviour:
   m_ObjectHideFlags: 0
