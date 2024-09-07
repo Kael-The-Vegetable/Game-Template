@@ -101,12 +101,17 @@ public class PlayerController : Actor
             LandingJumpInputTimer = _landingJumpInputTime;
         }
 
-        if (context.canceled && _holdForHigherJumps)
+        if (context.canceled)
         {
             LandingJumpInputTimer = 0;
-            if (_body.velocity.y > 0)
+
+            if (_holdForHigherJumps)
             {
-                _body.velocity = new Vector2(_body.velocity.x, 0);
+                // Set player's velocity to 0 when the button is released.
+                if (_body.velocity.y > 0)
+                {
+                    _body.velocity = new Vector2(_body.velocity.x, 0);
+                }
             }
         }
     }
