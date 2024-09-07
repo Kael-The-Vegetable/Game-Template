@@ -23,5 +23,13 @@ public class Singleton : MonoBehaviour
         }
         Game = GetComponentInChildren<GameManager>();
         Audio = GetComponentInChildren<AudioManager>();
+        if (Game == null)
+        {
+            Debug.LogError("Singleton must have a child with the GameManager script.");
+        }
+        if (Audio == null)
+        {
+            Debug.LogError("Singleton must have a child with the AudioManager script.");
+        }
     }
 }
