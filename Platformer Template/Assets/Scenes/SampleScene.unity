@@ -511,10 +511,11 @@ MonoBehaviour:
   _speed: 80
   _maxSpeed: 5
   _jumpForce: 20
-  _isGrounded: 0
   _groundCastPosition: {x: -0.5, y: -1.05}
   _groundCastLength: {x: 1, y: 0}
-  _nameOfGroundLayer: Ground
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   _fallingGravityMultiplier: 2
   _landingJumpInputTime: 0.5
   _holdForHigherJumps: 0
