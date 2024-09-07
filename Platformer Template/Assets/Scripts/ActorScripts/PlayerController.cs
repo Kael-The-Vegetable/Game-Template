@@ -47,14 +47,23 @@ public class PlayerController : Actor
     {
         base.FixedUpdate();
 
-        _isGrounded = Physics2D.Raycast((Vector2)transform.position + _groundCastPosition, _groundCastLength.normalized, _groundCastLength.magnitude, _groundLayer);
+        // This line of code can be explained as follows
+        _isGrounded = Physics2D.Raycast( // A Raycast is a line that detects if something traveled through it.
+            (Vector2)transform.position + _groundCastPosition,// this is the position of the raycast
+                                                              // (the transform.position makes it
+                                                              // relative to the player)
+            _groundCastLength.normalized, // This shows direction of where to cast the ray
+            _groundCastLength.magnitude, // this shows for how long to cast the ray
+            _groundLayer); // this shows what layer of stuff is allows to be detected
+
+
         if (Mathf.Abs(_body.velocity.x) > _maxSpeed)
-        {
+        { // If the total value of x is greater than the max speed then clamp it to max speed
             _body.velocity = new Vector2(Mathf.Sign(_body.velocity.x) * _maxSpeed, _body.velocity.y);
         }
 
         if (_body.velocity.y < 0)
-        {
+        { // If the velocity of y is downward, then make it falling
             _body.gravityScale = _defaultGravityScale * _fallingGravityMultiplier;
         }
         else
@@ -64,9 +73,12 @@ public class PlayerController : Actor
 
 
         if (LandingJumpInputTimer > 0 && _isGrounded)
-        {
+        { // This is to ensure that inputs just before a jump are not wasted
             Jump();
         }
+
+        // The timer goes down the same time that this method is called.
+        // This will count down in seconds.
         LandingJumpInputTimer -= Time.fixedDeltaTime;
     }
 
