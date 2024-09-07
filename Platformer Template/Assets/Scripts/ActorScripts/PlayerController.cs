@@ -7,17 +7,18 @@ using UnityEngine.UI;
 
 public class PlayerController : Actor
 {
+    // this is miserable to read, will fix later
     [SerializeField, Min(0), Tooltip("The total speed allowed.")] private float _maxSpeed = 5;
     [SerializeField, Min(0), Tooltip("The amount of force applied upwards when jumping.")] private int _jumpForce = 5;
     [Space]
     private bool _isGrounded;
     [SerializeField, Tooltip("Position is relative to the player. This is the starting line of the raycast, where it will draw from.")] private Vector2 _groundCastPosition;
     [SerializeField, Tooltip("Position is relative to the Cast Position. This is the ending lin of the raycast, where it will draw to.")] private Vector2 _groundCastLength;
-    [SerializeField, Tooltip("This uses the layers on every object. Any object on a layer, that is the same name as this, will trigger the player to think that object is able to be jumped off.")] private string _nameOfGroundLayer = "Ground";
+    [SerializeField, Tooltip("The player will be able to jump off any colliders in the selected layer(s).")] private LayerMask _groundLayer;
     [SerializeField, Min(0), Tooltip("When the player falls the gravity is multiplied to reduce the 'floaty' behaviour of Unity.")] private float _fallingGravityMultiplier = 2;
     [SerializeField, Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")] private float _landingJumpInputTime = 0.1f;
     [SerializeField, Tooltip("This is a toggle for if you want players jump height to be tied to how long they hold the button for.")] private bool _holdForHigherJumps = true;
-    private int _groundLayer;
+    private int _groundLayerID;
 
     private float _defaultGravityScale;
     private float _landingJumpInputTimer = 0;
@@ -39,9 +40,8 @@ public class PlayerController : Actor
 
     public override void Awake()
     {
-        base.Awake(); // this calls the Awake method in the Actor script
+        base.Awake(); // this calls the Awake method in the base class, "Actor"
         _defaultGravityScale = _body.gravityScale;
-        _groundLayer = 1 << LayerMask.NameToLayer(_nameOfGroundLayer); // this moves the bit 1 to the 2s place then the 4s place and so on. Used for unique ids for the layers.
     }
     public override void FixedUpdate()
     {
@@ -63,7 +63,7 @@ public class PlayerController : Actor
         }
 
         if (_body.velocity.y < 0)
-        { // If the velocity of y is downward, then make it falling
+        { // If the velocity of y is downward, then increase gravity.
             _body.gravityScale = _defaultGravityScale * _fallingGravityMultiplier;
         }
         else
@@ -107,7 +107,7 @@ public class PlayerController : Actor
 
             if (_holdForHigherJumps)
             {
-                // Set player's velocity to 0 when the button is released.
+                // Set player's vertical velocity to 0 when the button is released.
                 if (_body.velocity.y > 0)
                 {
                     _body.velocity = new Vector2(_body.velocity.x, 0);
