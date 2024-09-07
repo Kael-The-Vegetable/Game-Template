@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,13 +14,36 @@ public class PlayerController : Actor
     [SerializeField] private Vector2 _groundCastPosition;
     [SerializeField] private Vector2 _groundCastLength;
     [SerializeField] private string _nameOfGroundLayer = "Ground";
+    [SerializeField, Min(0)] private float _downwardGravityScale = 2;
+    [SerializeField, Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")] private float _landingJumpInputTime = 0.1f;
+
     private int _groundLayer;
-    public new void Awake()
+
+    private float _defaultGravityScale;
+    private float _landingJumpInputTimer = 0;
+
+    public float LandingJumpInputTimer
+    {
+        get => _landingJumpInputTimer; set
+        {
+            if (value < 0)
+            {
+                _landingJumpInputTimer = 0;
+            }
+            else
+            {
+                _landingJumpInputTimer = value;
+            }
+        }
+    }
+
+    public override void Awake()
     {
         base.Awake();
+        _defaultGravityScale = _body.gravityScale;
         _groundLayer = 1 << LayerMask.NameToLayer(_nameOfGroundLayer);
     }
-    public new void FixedUpdate()
+    public override void FixedUpdate()
     {
         base.FixedUpdate();
 
@@ -28,6 +52,27 @@ public class PlayerController : Actor
         {
             _body.velocity = new Vector2(Mathf.Sign(_body.velocity.x) * _maxSpeed, _body.velocity.y);
         }
+
+        if (_body.velocity.y < 0)
+        {
+            _body.gravityScale = _downwardGravityScale;
+        }
+        else
+        {
+            _body.gravityScale = _defaultGravityScale;
+        }
+
+        LandingJumpInputTimer -= Time.fixedDeltaTime;
+
+        if (LandingJumpInputTimer > 0 && _isGrounded)
+        {
+            Jump();
+        }
+    }
+
+    private void Jump()
+    {
+        _body.AddForce(new Vector2(0, _jumpForce), ForceMode2D.Impulse);
     }
 
     #region Movement
@@ -37,13 +82,18 @@ public class PlayerController : Actor
     }
     public void JumpControl(InputAction.CallbackContext context)
     {
-        if (context.performed && _isGrounded)
+        if (context.performed)
         {
-            _body.AddForce(new Vector2(0, _jumpForce), ForceMode2D.Impulse);
+            LandingJumpInputTimer = _landingJumpInputTime;
+        }
+
+        if (context.canceled)
+        {
+            LandingJumpInputTimer = 0;
         }
     }
     #endregion
-    
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
