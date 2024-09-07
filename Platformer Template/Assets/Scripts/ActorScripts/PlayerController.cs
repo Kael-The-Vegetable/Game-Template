@@ -14,7 +14,7 @@ public class PlayerController : Actor
     [SerializeField] private Vector2 _groundCastPosition;
     [SerializeField] private Vector2 _groundCastLength;
     [SerializeField] private string _nameOfGroundLayer = "Ground";
-    [SerializeField, Min(0)] private float _downwardGravityScale = 2;
+    [SerializeField, Min(0)] private float _fallingGravityMultiplier = 2;
     [SerializeField, Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")] private float _landingJumpInputTime = 0.1f;
 
     private int _groundLayer;
@@ -55,23 +55,25 @@ public class PlayerController : Actor
 
         if (_body.velocity.y < 0)
         {
-            _body.gravityScale = _downwardGravityScale;
+            _body.gravityScale = _defaultGravityScale * _fallingGravityMultiplier;
         }
         else
         {
             _body.gravityScale = _defaultGravityScale;
         }
 
-        LandingJumpInputTimer -= Time.fixedDeltaTime;
 
         if (LandingJumpInputTimer > 0 && _isGrounded)
         {
             Jump();
         }
+        LandingJumpInputTimer -= Time.fixedDeltaTime;
     }
 
     private void Jump()
     {
+        LandingJumpInputTimer = 0;
+        _body.velocity = new Vector2(_body.velocity.x, 0);
         _body.AddForce(new Vector2(0, _jumpForce), ForceMode2D.Impulse);
     }
 
@@ -90,6 +92,10 @@ public class PlayerController : Actor
         if (context.canceled)
         {
             LandingJumpInputTimer = 0;
+            if (_body.velocity.y > 0)
+            {
+                _body.velocity = new Vector2(_body.velocity.x, 0);
+            }
         }
     }
     #endregion

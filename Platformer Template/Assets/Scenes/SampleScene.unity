@@ -380,7 +380,7 @@ Rigidbody2D:
   m_Mass: 2
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 2
+  m_GravityScale: 1.5
   m_Material: {fileID: 6200000, guid: 2652266f32e48404c97a17d05d5adb32, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -512,9 +512,11 @@ MonoBehaviour:
   _maxSpeed: 5
   _jumpForce: 20
   _isGrounded: 0
-  _groundCastPosition: {x: -0.5, y: -1.2}
+  _groundCastPosition: {x: -0.5, y: -1.05}
   _groundCastLength: {x: 1, y: 0}
   _nameOfGroundLayer: Ground
+  _fallingGravityMultiplier: 2
+  _landingJumpInputTime: 0.5
 --- !u!114 &1272280740
 MonoBehaviour:
   m_ObjectHideFlags: 0
