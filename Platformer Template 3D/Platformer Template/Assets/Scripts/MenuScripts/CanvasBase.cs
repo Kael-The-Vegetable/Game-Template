@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,26 +7,29 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class CanvasBase : MonoBehaviour
 {
-    internal Button[] _buttons;
-    internal Toggle[] _toggles;
-    internal Slider[] _sliders;
-    internal Image[] _images;
-    internal TextMeshProUGUI[] _texts;
+    [SerializeField] internal Button[] _buttons;
+    [SerializeField] internal Toggle[] _toggles;
+    [SerializeField] internal Slider[] _sliders;
+    [SerializeField] internal TMP_Dropdown[] _dropdowns;
+    [SerializeField] internal TMP_InputField[] _inputFields;
 
-    private GameObject _lastSelectedObject;
-    private CanvasGroup _canvas;
+    [SerializeField] internal Image[] _images;
+    [SerializeField] internal TextMeshProUGUI[] _texts;
 
-    internal bool _slowOrPauseTimeWhileActive = false;
-    internal float _timeScale = 0;
-    private float _originalTimeScale;
+    internal GameObject _lastSelectedObject;
+    internal CanvasGroup _canvas;
 
-    internal bool _fadeIn = true;
-    internal float _fadeInTimer = 1;
+    [SerializeField] internal bool _slowOrPauseTimeWhileActive = false;
+    [SerializeField] internal float _timeScale = 0;
+    internal float _originalTimeScale;
 
-    internal bool _fadeOut = false;
-    internal float _fadeOutTimer = 1;
+    [SerializeField] internal bool _fadeIn = true;
+    [SerializeField] internal float _fadeInTimer = 1;
 
-    internal EventSystem _eventSystem;
+    [SerializeField] internal bool _fadeOut = false;
+    [SerializeField] internal float _fadeOutTimer = 1;
+
+    [SerializeField] internal EventSystem _eventSystem;
 
     internal virtual void Awake()
     {
@@ -44,6 +46,14 @@ public class CanvasBase : MonoBehaviour
         {
             _lastSelectedObject = _sliders[0].gameObject;
         }
+        else if (_dropdowns.Length > 0)
+        {
+            _lastSelectedObject = _dropdowns[0].gameObject;
+        }
+        else if (_inputFields.Length > 0)
+        {
+            _lastSelectedObject = _inputFields[0].gameObject;
+        }
         else
         {
             Debug.LogWarning("A canvas should have something interactable on it.");
@@ -57,7 +67,7 @@ public class CanvasBase : MonoBehaviour
         }
         if (_fadeIn)
         {
-            StartCoroutine(Fade(_fadeInTimer, true));
+            FadeIn();
         }
         if (_slowOrPauseTimeWhileActive)
         {
@@ -71,27 +81,15 @@ public class CanvasBase : MonoBehaviour
         {
             Time.timeScale = _originalTimeScale;
         }
-        foreach (var button in _buttons)
+        _canvas.interactable = true;
+        if (_eventSystem != null)
         {
-            if (!button.enabled)
-            {
-                button.enabled = true;
-            }
+            _lastSelectedObject = _eventSystem.currentSelectedGameObject;
         }
-        foreach (var toggle in _toggles)
-        {
-            if (!toggle.enabled)
-            {
-                toggle.enabled = true;
-            }
-        }
-        foreach (var slider in _sliders)
-        {
-            if (!slider.enabled)
-            {
-                slider.enabled = true;
-            }
-        }
+    }
+    internal virtual void FadeIn()
+    {
+        StartCoroutine(Fade(_fadeInTimer, true));
     }
     internal virtual void FadeOut()
     {
@@ -99,28 +97,7 @@ public class CanvasBase : MonoBehaviour
     }
     internal virtual IEnumerator Fade(float fadeTime, bool fadeIn)
     {
-        foreach(var button in _buttons)
-        {
-            if (button.enabled)
-            {
-                button.enabled = false;
-            }
-        }
-        foreach(var toggle in _toggles)
-        {
-            if (toggle.enabled)
-            {
-                toggle.enabled = false;
-            }
-        }
-        foreach(var slider in _sliders)
-        {
-            if (slider.enabled)
-            {
-                slider.enabled = false;
-            }
-        }
-        
+        _canvas.interactable = false;
         if (fadeIn)
         { // fadingIn
             float timer = 0;
@@ -142,27 +119,8 @@ public class CanvasBase : MonoBehaviour
                     yield return null;
                 }
             }
-            foreach (var button in _buttons)
-            {
-                if (!button.enabled)
-                {
-                    button.enabled = true;
-                }
-            }
-            foreach (var toggle in _toggles)
-            {
-                if (!toggle.enabled)
-                {
-                    toggle.enabled = true;
-                }
-            }
-            foreach (var slider in _sliders)
-            {
-                if (!slider.enabled)
-                {
-                    slider.enabled = true;
-                }
-            }
+            _canvas.alpha = 1;
+            _canvas.interactable = true;
         }
         else
         { // fadingOut
@@ -181,10 +139,11 @@ public class CanvasBase : MonoBehaviour
                 while (timer > 0)
                 {
                     _canvas.alpha = timer / fadeTime;
-                    timer += Time.deltaTime;
+                    timer -= Time.deltaTime;
                     yield return null;
                 }
             }
+            _canvas.alpha = 0;
             gameObject.SetActive(false);
         }
     }
