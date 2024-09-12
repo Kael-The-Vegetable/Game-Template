@@ -7,11 +7,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CanvasGroup))]
 public class CanvasBase : MonoBehaviour
 {
-    [SerializeField] internal Button[] _buttons;
-    [SerializeField] internal Toggle[] _toggles;
-    [SerializeField] internal Slider[] _sliders;
-    [SerializeField] internal TMP_Dropdown[] _dropdowns;
-    [SerializeField] internal TMP_InputField[] _inputFields;
+    [field:SerializeField] public Button[] Buttons { get; internal set; }
+    [field:SerializeField] public Toggle[] Toggles { get; internal set; }
+    [field:SerializeField] public Slider[] Sliders { get; internal set; }
+    [field:SerializeField] public TMP_Dropdown[] Dropdowns { get; internal set; }
+    [field:SerializeField] public TMP_InputField[] InputFields { get; internal set; }
 
     [SerializeField] internal Image[] _images;
     [SerializeField] internal TextMeshProUGUI[] _texts;
@@ -34,25 +34,25 @@ public class CanvasBase : MonoBehaviour
     internal virtual void Awake()
     {
         _canvas = GetComponent<CanvasGroup>();
-        if (_buttons.Length > 0)
+        if (Buttons.Length > 0)
         {
-            _lastSelectedObject = _buttons[0].gameObject;
+            _lastSelectedObject = Buttons[0].gameObject;
         }
-        else if (_toggles.Length > 0)
+        else if (Toggles.Length > 0)
         {
-            _lastSelectedObject = _toggles[0].gameObject;
+            _lastSelectedObject = Toggles[0].gameObject;
         }
-        else if (_sliders.Length > 0)
+        else if (Sliders.Length > 0)
         {
-            _lastSelectedObject = _sliders[0].gameObject;
+            _lastSelectedObject = Sliders[0].gameObject;
         }
-        else if (_dropdowns.Length > 0)
+        else if (Dropdowns.Length > 0)
         {
-            _lastSelectedObject = _dropdowns[0].gameObject;
+            _lastSelectedObject = Dropdowns[0].gameObject;
         }
-        else if (_inputFields.Length > 0)
+        else if (InputFields.Length > 0)
         {
-            _lastSelectedObject = _inputFields[0].gameObject;
+            _lastSelectedObject = InputFields[0].gameObject;
         }
         else
         {
