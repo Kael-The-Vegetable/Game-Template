@@ -14,13 +14,13 @@ public class PlayerController : Actor
     private int _jumpForce = 5;
 
     [Space]
-    private bool _isGrounded;
+    [SerializeField] private bool _isGrounded;
     
     [SerializeField, Tooltip("Position is relative to the player. This is the starting line of the raycast, where it will draw from.")]
-    private Vector2 _groundCastPosition;
+    private Vector3 _groundCastPosition;
     
     [SerializeField, Tooltip("Position is relative to the Cast Position. This is the ending lin of the raycast, where it will draw to.")]
-    private Vector2 _groundCastLength;
+    private Vector3 _groundCastLength;
     
     [SerializeField, Tooltip("The player will be able to jump off any colliders in the selected layer(s).")]
     private LayerMask _groundLayer;
@@ -55,34 +55,31 @@ public class PlayerController : Actor
     public override void Awake()
     {
         base.Awake(); // this calls the Awake method in the base class, "Actor"
-        _defaultGravityScale = _body.gravityScale;
+        //_defaultGravityScale = _body.gravityScale;
     }
     public override void FixedUpdate()
     {
         base.FixedUpdate();
 
         // This line of code can be explained as follows
-        _isGrounded = Physics2D.Raycast( // A Raycast is a line that detects if something traveled through it.
-            (Vector2)transform.position + _groundCastPosition,// this is the position of the raycast
+        _isGrounded = Physics.Raycast( // A Raycast is a line that detects if something traveled through it.
+            transform.position + _groundCastPosition,// this is the position of the raycast
                                                               // (the transform.position makes it
                                                               // relative to the player)
             _groundCastLength.normalized, // This shows direction of where to cast the ray
+            out _,
             _groundCastLength.magnitude, // this shows for how long to cast the ray
             _groundLayer); // this shows what layer of stuff is allows to be detected
 
 
         if (Mathf.Abs(_body.velocity.x) > _maxSpeed)
         { // If the total value of x is greater than the max speed then clamp it to max speed
-            _body.velocity = new Vector2(Mathf.Sign(_body.velocity.x) * _maxSpeed, _body.velocity.y);
+            _body.velocity = new Vector3(Mathf.Sign(_body.velocity.x) * _maxSpeed, _body.velocity.y, _body.velocity.z);
         }
 
-        if (_body.velocity.y < 0)
-        { // If the velocity of y is downward, then increase gravity.
-            _body.gravityScale = _defaultGravityScale * _fallingGravityMultiplier;
-        }
-        else
-        {
-            _body.gravityScale = _defaultGravityScale;
+        if (Mathf.Abs(_body.velocity.z) > _maxSpeed)
+        { // If the total value of x is greater than the max speed then clamp it to max speed
+            _body.velocity = new Vector3(_body.velocity.x, _body.velocity.y, Mathf.Sign(_body.velocity.z) * _maxSpeed);
         }
 
 
@@ -99,14 +96,14 @@ public class PlayerController : Actor
     private void Jump()
     {
         LandingJumpInputTimer = 0;
-        _body.velocity = new Vector2(_body.velocity.x, 0);
-        _body.AddForce(new Vector2(0, _jumpForce), ForceMode2D.Impulse);
+        _body.velocity = new Vector3(_body.velocity.x, 0, _body.velocity.z);
+        _body.AddForce(new Vector3(0, _jumpForce, 0), ForceMode.Impulse);
     }
 
     #region Movement
     public void MoveControl(InputAction.CallbackContext context)
     {
-        _moveDir = new Vector2(context.ReadValue<Vector2>().x, 0);
+        _moveDir = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
     }
     public void JumpControl(InputAction.CallbackContext context)
     {
@@ -124,7 +121,7 @@ public class PlayerController : Actor
                 // Set player's vertical velocity to 0 when the button is released.
                 if (_body.velocity.y > 0)
                 {
-                    _body.velocity = new Vector2(_body.velocity.x, 0);
+                    _body.velocity = new Vector3(_body.velocity.x, 0, _body.velocity.z);
                 }
             }
         }
@@ -134,6 +131,6 @@ public class PlayerController : Actor
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawRay((Vector2)transform.position + _groundCastPosition, _groundCastLength);
+        Gizmos.DrawRay(transform.position + _groundCastPosition, _groundCastLength);
     }
 }
