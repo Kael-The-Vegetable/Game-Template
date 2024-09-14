@@ -460,7 +460,7 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _fallingGravityForce: {fileID: 0}
+  _fallingGravityForce: {fileID: 1425015597}
   _landingJumpInputTime: 0.1
   _holdForHigherJumps: 1
   _showGroundRaycast: 1
