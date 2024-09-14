@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class PlayerController : Actor
 {
+    // Serialized simply means that the field will be shown in the inspector. Fields that are public will automatically be shown, without the need for the [SerializeField] attribute.
+    // #region allows you to collapse a section of code by clicking the arrow to the left of it.
+    #region Serailized Fields
     [Header("Movement Settings")]
     [SerializeField, Min(0), Tooltip("The total speed allowed.")]
     private float _maxSpeed = 5;
@@ -28,13 +30,24 @@ public class PlayerController : Actor
 
     [Header("Other Settings")]
     [SerializeField, Tooltip("A Constant force component that will only be activated while moving down.")]
-    private ConstantForce _fallingGravity;
+    private ConstantForce _fallingGravityForce;
     
     [SerializeField, Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")]
     private float _landingJumpInputTime = 0.1f;
     
     [SerializeField, Tooltip("This is a toggle for if you want players jump height to be tied to how long they hold the button for.")]
     private bool _holdForHigherJumps = true;
+
+    [Header("Debug Settings")]
+    [SerializeField]
+    private bool _showGroundRaycast = true;
+
+    [SerializeField]
+    private bool _showVelocityVector = false;
+
+    [SerializeField]
+    private bool _showFallingGravityVector = true;
+    #endregion
 
     private float _landingJumpInputTimer = 0;
 
@@ -56,7 +69,11 @@ public class PlayerController : Actor
     public override void Awake()
     {
         base.Awake(); // this calls the Awake method in the base class, "Actor"
-        //_defaultGravityScale = _body.gravityScale;
+
+        if (_fallingGravityForce != null)
+        {
+            _fallingGravityForce.enabled = false;
+        }
     }
 
     // Physics-related code, such as adding force, should be executed in FixedUpdate for consistent results.
@@ -85,6 +102,11 @@ public class PlayerController : Actor
             _body.velocity = new Vector3(_body.velocity.x, _body.velocity.y, Mathf.Sign(_body.velocity.z) * _maxSpeed);
         }
 
+        if (_fallingGravityForce != null)
+        {
+            // if the body's vertical velocity is less than 0 (the object is falling), enable the falling gravity component.
+            _fallingGravityForce.enabled = _body.velocity.y < 0;
+        }
 
         if (LandingJumpInputTimer > 0 && _isGrounded)
         { // This is to ensure that inputs just before a jump are not wasted
@@ -135,7 +157,22 @@ public class PlayerController : Actor
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(transform.position + _groundCastPosition, _groundCastLength);
+        if (_showGroundRaycast)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawRay(transform.position + _groundCastPosition, _groundCastLength); 
+        }
+
+        if (_showVelocityVector && _body != null)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawRay(_body.centerOfMass, _body.velocity);
+        }
+
+        if (_showFallingGravityVector && _fallingGravityForce != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(transform.position, _fallingGravityForce.force + _fallingGravityForce.relativeForce);
+        }
     }
 }

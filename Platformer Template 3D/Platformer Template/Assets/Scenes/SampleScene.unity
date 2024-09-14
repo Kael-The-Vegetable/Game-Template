@@ -429,6 +429,7 @@ GameObject:
   - component: {fileID: 1425015591}
   - component: {fileID: 1425015590}
   - component: {fileID: 1425015596}
+  - component: {fileID: 1425015597}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -459,9 +460,12 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _fallingGravity: {fileID: 0}
+  _fallingGravityForce: {fileID: 0}
   _landingJumpInputTime: 0.1
   _holdForHigherJumps: 1
+  _showGroundRaycast: 1
+  _showVelocityVector: 0
+  _showFallingGravityVector: 1
 --- !u!54 &1425015591
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -639,6 +643,18 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!75 &1425015597
+ConstantForce:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1425015589}
+  m_Enabled: 1
+  m_Force: {x: 0, y: -9.81, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
