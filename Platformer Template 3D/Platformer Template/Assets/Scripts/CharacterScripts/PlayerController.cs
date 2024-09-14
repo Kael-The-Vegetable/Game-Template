@@ -42,7 +42,7 @@ public class PlayerController : Actor
         get => _landingJumpInputTimer; set
         {
             if (value < 0)
-            { // if the value trying to be set to LandingJumpInputTimer is below 0 it will be replaced with 0
+            { // if the value trying to be set to LandingJumpInputTimer is below 0 it will be replaced with 0. In other words, _landingJumpInputTimer can never be less than 0.
                 _landingJumpInputTimer = 0;
             }
             else
@@ -69,7 +69,7 @@ public class PlayerController : Actor
             _groundCastLength.normalized, // This shows direction of where to cast the ray
             out _,
             _groundCastLength.magnitude, // this shows for how long to cast the ray
-            _groundLayer); // this shows what layer of stuff is allows to be detected
+            _groundLayer); // this shows what layer(s) will be counted as ground.
 
 
         if (Mathf.Abs(_body.velocity.x) > _maxSpeed)
@@ -103,8 +103,10 @@ public class PlayerController : Actor
     #region Movement
     public void MoveControl(InputAction.CallbackContext context)
     {
-        _moveDir = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
+        Vector2 inputDirection = context.ReadValue<Vector2>();
+        _moveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
     }
+
     public void JumpControl(InputAction.CallbackContext context)
     {
         if (context.performed)
