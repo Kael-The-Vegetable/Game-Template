@@ -450,8 +450,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _body: {fileID: 1425015591}
-  _moveDir: {x: 0, y: 0, z: 0}
-  _speed: 100
+  <MoveDir>k__BackingField: {x: 0, y: 0, z: 0}
+  <Speed>k__BackingField: 100
   _maxSpeed: 5
   _jumpForce: 10
   _isGrounded: 0

@@ -10,8 +10,8 @@ public class Actor : MonoBehaviour, IDamageable, IMoving
     [SerializeField] internal Rigidbody _body;
     public int Health { get; internal set; }
 
-    public Vector3 MoveDir { get; internal set; } = Vector3.zero;
-    public float Speed { get; internal set; } = 0;
+    [field:SerializeField] public Vector3 MoveDir { get; internal set; } = Vector3.zero;
+    [field:SerializeField] public float Speed { get; internal set; } = 0;
 
     public virtual void Awake()
     {
