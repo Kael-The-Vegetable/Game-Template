@@ -4,6 +4,12 @@ using UnityEngine;
 
 public interface IDamageable
 {
-    internal int Health { get; set; }
-    public void TakeDamage(int damage);
+    int Health { get; }
+    void TakeDamage(int damage);
+}
+
+public interface IMoving
+{
+    Vector3 MoveDir { get; }
+    float Speed { get; }
 }

@@ -87,7 +87,7 @@ public class PlayerController : Actor
                                                               // (the transform.position makes it
                                                               // relative to the player)
             _groundCastLength.normalized, // This shows direction of where to cast the ray
-            out _,
+            out _, // This just shows that we do not care about the output of this Raycast except for the bool
             _groundCastLength.magnitude, // this shows for how long to cast the ray
             _groundLayer); // this shows what layer(s) will be counted as ground.
 
@@ -129,7 +129,7 @@ public class PlayerController : Actor
     public void MoveControl(InputAction.CallbackContext context)
     {
         Vector2 inputDirection = context.ReadValue<Vector2>();
-        _moveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
+        MoveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
     }
 
     public void JumpControl(InputAction.CallbackContext context)

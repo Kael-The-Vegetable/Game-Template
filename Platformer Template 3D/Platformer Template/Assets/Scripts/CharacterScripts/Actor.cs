@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Actor : MonoBehaviour, IDamageable
+public class Actor : MonoBehaviour, IDamageable, IMoving
 {
     [Header("Actor Settings")]
     [SerializeField] internal Rigidbody _body;
-    int IDamageable.Health { get; set; }
+    public int Health { get; internal set; }
 
-    [SerializeField] internal Vector3 _moveDir = Vector3.zero;
-    [SerializeField] internal float _speed = 0;
+    public Vector3 MoveDir { get; internal set; } = Vector3.zero;
+    public float Speed { get; internal set; } = 0;
 
     public virtual void Awake()
     {
@@ -24,11 +24,11 @@ public class Actor : MonoBehaviour, IDamageable
 
     public virtual void FixedUpdate()
     {
-        _body.AddForce(_moveDir * _speed);
+        _body.AddForce(MoveDir * Speed);
     }
 
     void IDamageable.TakeDamage(int damage)
     {
-        throw new System.NotImplementedException();
+        Health -= damage;
     }
 }
