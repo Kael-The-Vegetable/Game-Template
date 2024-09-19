@@ -72,6 +72,9 @@ public class PlayerController : Actor
 
     [SerializeField]
     private bool _showFallingGravityVector = true;
+
+    [SerializeField]
+    private bool _showFacingDirectionVector = true;
     #endregion
     #endregion
 
@@ -91,6 +94,8 @@ public class PlayerController : Actor
         }
     }
 
+    private Vector3 _originalMoveDir = Vector3.zero;
+
     public override void Awake()
     {
         base.Awake(); // this calls the Awake method in the base class, "Actor"
@@ -104,6 +109,8 @@ public class PlayerController : Actor
     // Physics-related code, such as adding force, should be executed in FixedUpdate for consistent results.
     public override void FixedUpdate()
     {
+        Vector3 trueMoveDir = transform.forward * _originalMoveDir.z + transform.right * _originalMoveDir.x;
+        MoveDir = trueMoveDir;
         base.FixedUpdate();
 
         // This line of code can be explained as follows
@@ -154,8 +161,7 @@ public class PlayerController : Actor
     public void MoveControl(InputAction.CallbackContext context)
     {
         Vector2 inputDirection = context.ReadValue<Vector2>();
-
-        MoveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
+        _originalMoveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
     }
 
     public void JumpControl(InputAction.CallbackContext context)
@@ -185,18 +191,23 @@ public class PlayerController : Actor
     public void LookControl(InputAction.CallbackContext context)
     {
         Vector2 delta = context.ReadValue<Vector2>();
-        _lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
-        _lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
+        
 
         if (_playerRotateWithCamera)
         {
             transform.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
-            transform.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
+        else
+        {
+            _lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
+            
+        }
+
+        _lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
 
         //clamp the up/down axis
-        Vector3 angles = _lookTarget.localEulerAngles;
+        Vector3 angles = _lookTarget.eulerAngles;
         angles.z = 0;
 
         if (angles.x > 180 && angles.x < 360 + _maxLookUpAngle)
@@ -207,7 +218,7 @@ public class PlayerController : Actor
         {
             angles.x = _maxLookDownAngle;
         }
-        _lookTarget.localEulerAngles = angles;
+        _lookTarget.eulerAngles = angles;
     }
     #endregion
     private void OnDrawGizmos()
@@ -228,6 +239,12 @@ public class PlayerController : Actor
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, _fallingGravityForce.force + _fallingGravityForce.relativeForce);
+        }
+
+        if (_showFacingDirectionVector)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawRay(transform.position, transform.forward * 2);
         }
     }
 }

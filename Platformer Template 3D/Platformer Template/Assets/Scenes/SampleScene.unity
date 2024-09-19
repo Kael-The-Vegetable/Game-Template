@@ -675,9 +675,10 @@ MonoBehaviour:
   _fallingGravityForce: {fileID: 1425015597}
   _landingJumpInputTime: 0.1
   _holdForHigherJumps: 1
-  _showGroundRaycast: 1
+  _showGroundRaycast: 0
   _showVelocityVector: 0
-  _showFallingGravityVector: 1
+  _showFallingGravityVector: 0
+  _showFacingDirectionVector: 1
 --- !u!54 &1425015591
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -703,7 +704,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 80
   m_CollisionDetection: 1
 --- !u!136 &1425015592
 CapsuleCollider:
@@ -777,7 +778,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425015589}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1425015595
 Transform:
   m_ObjectHideFlags: 0
