@@ -8,7 +8,9 @@ using UnityEngine.UI;
 public abstract class CanvasBase : MonoBehaviour
 {
     #region Serialized Fields
-    [field:Header("Components Of the Canvas")]
+
+    #region Components of the Canvas
+    [field:Header("Components of the Canvas")]
     [field:SerializeField, Tooltip("Place Buttons you wish to change in here so the canvas has access to it.")] 
     public Button[] Buttons { get; internal set; }
 
@@ -29,16 +31,17 @@ public abstract class CanvasBase : MonoBehaviour
 
     [field: SerializeField, Tooltip("Place TextMeshPro objects you wish to change in here so the canvas has access to it.")]
     public TextMeshProUGUI[] Texts { get; internal set; }
+    #endregion
 
-    
-
+    #region Time Settings
     [Header("Time Settings")]
     [SerializeField] internal bool _slowOrPauseTimeWhileActive = false;
     [SerializeField] internal float _timeScale = 0;
-    
+    #endregion
 
     [Header("Event System")]
     [SerializeField] internal EventSystem _eventSystem;
+
     #endregion
 
     internal GameObject _lastSelectedObject;
