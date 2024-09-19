@@ -663,7 +663,7 @@ MonoBehaviour:
   _jumpForce: 10
   _lookTarget: {fileID: 1110195171}
   _rotationPower: 0.1
-  _maxLookDownAngle: 60
+  _maxLookDownAngle: 80
   _maxLookUpAngle: -10
   _playerRotateWithCamera: 1
   _isGrounded: 0
