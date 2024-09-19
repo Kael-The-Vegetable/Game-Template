@@ -129,9 +129,11 @@ public class PlayerController : Actor
             _groundLayer); // this shows what layer(s) will be counted as ground.
         #endregion
 
+        #region Horizontal Velocity Clamping
         Vector2 horizontalVelocity = new Vector2(_body.velocity.x, _body.velocity.z);
         horizontalVelocity = Vector2.ClampMagnitude(horizontalVelocity, _maxSpeed);
         _body.velocity = new Vector3(horizontalVelocity.x, _body.velocity.y, horizontalVelocity.y);
+        #endregion
 
         if (_fallingGravityForce != null)
         {
@@ -200,7 +202,6 @@ public class PlayerController : Actor
         else
         {
             _lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
-            
         }
 
         _lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
