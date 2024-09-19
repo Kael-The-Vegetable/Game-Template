@@ -9,13 +9,16 @@ public class PlayerController : Actor
     // Serialized simply means that the field will be shown in the inspector. Fields that are public will automatically be shown, without the need for the [SerializeField] attribute.
     // #region allows you to collapse a section of code by clicking the arrow to the left of it.
     #region Serailized Fields
+    #region Movement Settings
     [Header("Movement Settings")]
     [SerializeField, Min(0), Tooltip("The total speed allowed.")]
     private float _maxSpeed = 5;
 
     [SerializeField, Min(0), Tooltip("The amount of force applied upwards when jumping.")]
     private int _jumpForce = 5;
+    #endregion
 
+    #region Looking Settings
     [Header("Looking Settings")]
     [SerializeField, Tooltip("This is the target for looking that is attached to the player. This will allow the cinemachine camera to rotate around.")]
     private Transform _lookTarget;
@@ -26,9 +29,14 @@ public class PlayerController : Actor
     [SerializeField, Range(0, 90), Tooltip("The greatest vertical angle allowed to look down.")]
     private float _maxLookDownAngle = 40;
 
-    [SerializeField, Range(270, 360), Tooltip("The greatest vertical angle allowed to look up. The angle has to be in the positive so minus 270 to figure out how much of an angle below you are allowed.")]
-    private float _maxLookUpAngle = 340;
+    [SerializeField, Range(-90, 0), Tooltip("The greatest vertical angle allowed to look up.")]
+    private float _maxLookUpAngle = -40;
 
+    [SerializeField, Tooltip("Enable this if you want the player to rotate with the mouse as well.")]
+    private bool _playerRotateWithCamera = false;
+    #endregion
+
+    #region Ground Detection Settings
     [Header("Ground Detection Settings")]
     [SerializeField] private bool _isGrounded;
     
@@ -40,7 +48,9 @@ public class PlayerController : Actor
     
     [SerializeField, Tooltip("The player will be able to jump off any colliders in the selected layer(s).")]
     private LayerMask _groundLayer;
+    #endregion
 
+    #region Other Settings
     [Header("Other Settings")]
     [SerializeField, Tooltip("A Constant force component that will only be activated while moving down.")]
     private ConstantForce _fallingGravityForce;
@@ -50,7 +60,9 @@ public class PlayerController : Actor
     
     [SerializeField, Tooltip("This is a toggle for if you want players jump height to be tied to how long they hold the button for.")]
     private bool _holdForHigherJumps = true;
+    #endregion
 
+    #region Debug Settings
     [Header("Debug Settings")]
     [SerializeField]
     private bool _showGroundRaycast = true;
@@ -61,9 +73,9 @@ public class PlayerController : Actor
     [SerializeField]
     private bool _showFallingGravityVector = true;
     #endregion
+    #endregion
 
     private float _landingJumpInputTimer = 0;
-
     public float LandingJumpInputTimer
     {
         get => _landingJumpInputTimer; set
@@ -142,6 +154,7 @@ public class PlayerController : Actor
     public void MoveControl(InputAction.CallbackContext context)
     {
         Vector2 inputDirection = context.ReadValue<Vector2>();
+
         MoveDir = new Vector3(inputDirection.x, 0, inputDirection.y);
     }
 
@@ -175,14 +188,20 @@ public class PlayerController : Actor
         _lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
         _lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
 
+        if (_playerRotateWithCamera)
+        {
+            transform.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
+            transform.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        }
+
         //clamp the up/down axis
         Vector3 angles = _lookTarget.localEulerAngles;
-        Debug.Log(_lookTarget.localEulerAngles);
         angles.z = 0;
 
-        if (angles.x > 180 && angles.x < _maxLookUpAngle)
+        if (angles.x > 180 && angles.x < 360 + _maxLookUpAngle)
         {
-            angles.x = _maxLookUpAngle;
+            angles.x = 360 + _maxLookUpAngle;
         }
         else if (angles.x < 180 && angles.x > _maxLookDownAngle)
         {
