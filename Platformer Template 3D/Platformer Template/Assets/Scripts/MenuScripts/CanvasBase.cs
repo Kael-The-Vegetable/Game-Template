@@ -5,31 +5,46 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(CanvasGroup))]
-public class CanvasBase : MonoBehaviour
+public abstract class CanvasBase : MonoBehaviour
 {
-    [field:SerializeField] public Button[] Buttons { get; internal set; }
-    [field:SerializeField] public Toggle[] Toggles { get; internal set; }
-    [field:SerializeField] public Slider[] Sliders { get; internal set; }
-    [field:SerializeField] public TMP_Dropdown[] Dropdowns { get; internal set; }
-    [field:SerializeField] public TMP_InputField[] InputFields { get; internal set; }
+    #region Serialized Fields
+    [field:Header("Components Of the Canvas")]
+    [field:SerializeField, Tooltip("Place Buttons you wish to change in here so the canvas has access to it.")] 
+    public Button[] Buttons { get; internal set; }
 
-    [SerializeField] internal Image[] _images;
-    [SerializeField] internal TextMeshProUGUI[] _texts;
+    [field:SerializeField, Tooltip("Place Toggles you wish to change in here so the canvas has access to it.")] 
+    public Toggle[] Toggles { get; internal set; }
+
+    [field: SerializeField, Tooltip("Place Sliders you wish to change in here so the canvas has access to it.")]
+    public Slider[] Sliders { get; internal set; }
+
+    [field: SerializeField, Tooltip("Place Dropdowns you wish to change in here so the canvas has access to it.")]
+    public TMP_Dropdown[] Dropdowns { get; internal set; }
+
+    [field: SerializeField, Tooltip("Place InputFields you wish to change in here so the canvas has access to it.")]
+    public TMP_InputField[] InputFields { get; internal set; }
+
+    [field: SerializeField, Tooltip("Place Images you wish to change in here so the canvas has access to it.")]
+    public Image[] Images { get; internal set; }
+
+    [field: SerializeField, Tooltip("Place TextMeshPro objects you wish to change in here so the canvas has access to it.")]
+    public TextMeshProUGUI[] Texts { get; internal set; }
+
+    
+
+    [Header("Time Settings")]
+    [SerializeField] internal bool _slowOrPauseTimeWhileActive = false;
+    [SerializeField] internal float _timeScale = 0;
+    
+
+    [Header("Event System")]
+    [SerializeField] internal EventSystem _eventSystem;
+    #endregion
 
     internal GameObject _lastSelectedObject;
     internal CanvasGroup _canvas;
 
-    [SerializeField] internal bool _slowOrPauseTimeWhileActive = false;
-    [SerializeField] internal float _timeScale = 0;
     internal float _originalTimeScale;
-
-    [SerializeField] internal bool _fadeIn = true;
-    [SerializeField] internal float _fadeInTimer = 1;
-
-    [SerializeField] internal bool _fadeOut = false;
-    [SerializeField] internal float _fadeOutTimer = 1;
-
-    [SerializeField] internal EventSystem _eventSystem;
 
     internal virtual void Awake()
     {
@@ -61,18 +76,14 @@ public class CanvasBase : MonoBehaviour
     }
     internal virtual void OnEnable()
     {
-        if (_eventSystem != null)
-        {
-            _eventSystem.firstSelectedGameObject = _lastSelectedObject;
-        }
-        if (_fadeIn)
-        {
-            FadeIn();
-        }
         if (_slowOrPauseTimeWhileActive)
         {
             _originalTimeScale = Time.timeScale;
             Time.timeScale = _timeScale;
+        }
+        if (_eventSystem != null)
+        {
+            _eventSystem.firstSelectedGameObject = _lastSelectedObject;
         }
     }
     internal virtual void OnDisable()
@@ -81,70 +92,9 @@ public class CanvasBase : MonoBehaviour
         {
             Time.timeScale = _originalTimeScale;
         }
-        _canvas.interactable = true;
         if (_eventSystem != null)
         {
             _lastSelectedObject = _eventSystem.currentSelectedGameObject;
-        }
-    }
-    internal virtual void FadeIn()
-    {
-        StartCoroutine(Fade(_fadeInTimer, true));
-    }
-    internal virtual void FadeOut()
-    {
-        StartCoroutine(Fade(_fadeOutTimer, false));
-    }
-    internal virtual IEnumerator Fade(float fadeTime, bool fadeIn)
-    {
-        _canvas.interactable = false;
-        if (fadeIn)
-        { // fadingIn
-            float timer = 0;
-            if (_slowOrPauseTimeWhileActive)
-            {
-                while (timer < fadeTime)
-                {
-                    _canvas.alpha = timer / fadeTime;
-                    timer += Time.unscaledDeltaTime;
-                    yield return null;
-                }
-            }
-            else
-            {
-                while (timer < fadeTime)
-                {
-                    _canvas.alpha = timer / fadeTime;
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-            }
-            _canvas.alpha = 1;
-            _canvas.interactable = true;
-        }
-        else
-        { // fadingOut
-            float timer = fadeTime;
-            if (_slowOrPauseTimeWhileActive)
-            {
-                while (timer > 0)
-                {
-                    _canvas.alpha = timer / fadeTime;
-                    timer -= Time.unscaledDeltaTime;
-                    yield return null;
-                }
-            }
-            else
-            {
-                while (timer > 0)
-                {
-                    _canvas.alpha = timer / fadeTime;
-                    timer -= Time.deltaTime;
-                    yield return null;
-                }
-            }
-            _canvas.alpha = 0;
-            gameObject.SetActive(false);
         }
     }
 }
