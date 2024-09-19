@@ -68,13 +68,16 @@ public class PlayerController : Actor
     private bool _showGroundRaycast = true;
 
     [SerializeField]
-    private bool _showVelocityVector = false;
+    private bool _showVelocityVector = true;
 
     [SerializeField]
     private bool _showFallingGravityVector = true;
 
     [SerializeField]
     private bool _showFacingDirectionVector = true;
+
+    [SerializeField]
+    private bool _showMoveDirVector = true;
     #endregion
     #endregion
 
@@ -111,8 +114,10 @@ public class PlayerController : Actor
     {
         Vector3 trueMoveDir = transform.forward * _originalMoveDir.z + transform.right * _originalMoveDir.x;
         MoveDir = trueMoveDir;
+
         base.FixedUpdate();
 
+        #region IsGrounded
         // This line of code can be explained as follows
         _isGrounded = Physics.Raycast( // A Raycast is a line that detects if something traveled through it.
             transform.position + _groundCastPosition,// this is the position of the raycast
@@ -122,17 +127,11 @@ public class PlayerController : Actor
             out _, // This just shows that we do not care about the output of this Raycast except for the bool
             _groundCastLength.magnitude, // this shows for how long to cast the ray
             _groundLayer); // this shows what layer(s) will be counted as ground.
+        #endregion
 
-
-        if (Mathf.Abs(_body.velocity.x) > _maxSpeed)
-        { // If the total value of x is greater than the max speed then clamp it to max speed
-            _body.velocity = new Vector3(Mathf.Sign(_body.velocity.x) * _maxSpeed, _body.velocity.y, _body.velocity.z);
-        }
-
-        if (Mathf.Abs(_body.velocity.z) > _maxSpeed)
-        { // If the total value of x is greater than the max speed then clamp it to max speed
-            _body.velocity = new Vector3(_body.velocity.x, _body.velocity.y, Mathf.Sign(_body.velocity.z) * _maxSpeed);
-        }
+        Vector2 horizontalVelocity = new Vector2(_body.velocity.x, _body.velocity.z);
+        horizontalVelocity = Vector2.ClampMagnitude(horizontalVelocity, _maxSpeed);
+        _body.velocity = new Vector3(horizontalVelocity.x, _body.velocity.y, horizontalVelocity.y);
 
         if (_fallingGravityForce != null)
         {
@@ -232,7 +231,7 @@ public class PlayerController : Actor
         if (_showVelocityVector && _body != null)
         {
             Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(_body.centerOfMass, _body.velocity);
+            Gizmos.DrawRay(_body.position + _body.centerOfMass, _body.velocity);
         }
 
         if (_showFallingGravityVector && _fallingGravityForce != null)
@@ -245,6 +244,12 @@ public class PlayerController : Actor
         {
             Gizmos.color = Color.green;
             Gizmos.DrawRay(transform.position, transform.forward * 2);
+        }
+
+        if (_showMoveDirVector)
+        {
+            Gizmos.color = Color.grey;
+            Gizmos.DrawRay(transform.position, MoveDir * 3);
         }
     }
 }
