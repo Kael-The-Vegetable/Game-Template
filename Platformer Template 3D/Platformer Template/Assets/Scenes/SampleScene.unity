@@ -676,10 +676,10 @@ MonoBehaviour:
   _landingJumpInputTime: 0.1
   _holdForHigherJumps: 1
   _showGroundRaycast: 0
-  _showVelocityVector: 1
+  _showVelocityVector: 0
   _showFallingGravityVector: 0
   _showFacingDirectionVector: 1
-  _showMoveDirVector: 1
+  _showMoveDirVector: 0
 --- !u!54 &1425015591
 Rigidbody:
   m_ObjectHideFlags: 0
