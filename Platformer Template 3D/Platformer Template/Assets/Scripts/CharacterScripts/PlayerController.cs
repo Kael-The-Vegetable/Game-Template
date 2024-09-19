@@ -16,6 +16,19 @@ public class PlayerController : Actor
     [SerializeField, Min(0), Tooltip("The amount of force applied upwards when jumping.")]
     private int _jumpForce = 5;
 
+    [Header("Looking Settings")]
+    [SerializeField, Tooltip("This is the target for looking that is attached to the player. This will allow the cinemachine camera to rotate around.")]
+    private Transform _lookTarget;
+
+    [SerializeField, Min(0), Tooltip("The amount of rotation power the looking has.")]
+    private float _rotationPower = 0.01f;
+
+    [SerializeField, Range(0, 90), Tooltip("The greatest vertical angle allowed to look down.")]
+    private float _maxLookDownAngle = 40;
+
+    [SerializeField, Range(270, 360), Tooltip("The greatest vertical angle allowed to look up. The angle has to be in the positive so minus 270 to figure out how much of an angle below you are allowed.")]
+    private float _maxLookUpAngle = 340;
+
     [Header("Ground Detection Settings")]
     [SerializeField] private bool _isGrounded;
     
@@ -155,6 +168,29 @@ public class PlayerController : Actor
     }
     #endregion
 
+    #region Looking
+    public void LookControl(InputAction.CallbackContext context)
+    {
+        Vector2 delta = context.ReadValue<Vector2>();
+        _lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _rotationPower, Vector3.up);
+        _lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _rotationPower, Vector3.right);
+
+        //clamp the up/down axis
+        Vector3 angles = _lookTarget.localEulerAngles;
+        Debug.Log(_lookTarget.localEulerAngles);
+        angles.z = 0;
+
+        if (angles.x > 180 && angles.x < _maxLookUpAngle)
+        {
+            angles.x = _maxLookUpAngle;
+        }
+        else if (angles.x < 180 && angles.x > _maxLookDownAngle)
+        {
+            angles.x = _maxLookDownAngle;
+        }
+        _lookTarget.localEulerAngles = angles;
+    }
+    #endregion
     private void OnDrawGizmos()
     {
         if (_showGroundRaycast)
