@@ -7,11 +7,24 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    protected Selectable[] Selectables { get; set; }
+    private Selectable[] selectables;
+    protected Selectable[] Selectables
+    {
+        get
+        {
+            if (selectables == null || selectables.Length == 0 || selectables.Contains(null))
+            {
+                selectables = GetComponentsInChildren<Selectable>();
+            }
+            return selectables;
+        }
 
-    [Tooltip("The parent menu will be hidden when this menu is opened, and shown when this menu is closed.")]
+        private set => selectables = value;
+    }
+
+    [Tooltip("If a parent menu is set, this menu will be closed when the parent is.")]
     [SerializeField] Menu parent;
-    public bool isOpen;
+    public bool isOpen = true;
 
     [Header("Events")]
     [Tooltip("This event is called when the menu is opened.")]
@@ -24,57 +37,53 @@ public class Menu : MonoBehaviour
     [Tooltip("This event is called when the menu is hidden or closed.")]
     public UnityEvent onMenuHidden;
 
-    // Protip: you can hover your mouse over a method that is blue like this to see when it is called!
-    protected virtual void OnEnable()
+    protected virtual void Start()
     {
         Selectables = GetComponentsInChildren<Selectable>();
 
         if (isOpen)
         {
-            OpenMenu();
+            ForceOpenMenu(force: true);
         }
         else
         {
-            CloseMenu();
+            ForceCloseMenu(force: true);
         }
     }
 
-    // Context child means you can run this method in the inspector by right-clicking the component
+    // ContextMenu means you can run this method in the inspector by right-clicking the component
     [ContextMenu("Open Menu")]
-    public void OpenMenu()
+    public void OpenMenu() => ForceOpenMenu(force: false);
+
+    private void ForceOpenMenu(bool force = false)
     {
-        if (!isOpen) // Only open the menu if we are closed
+        if (!isOpen || force) // Only open the menu if we are closed or if we are force it
         {
             isOpen = true;
-            onMenuOpened.Invoke();
             ShowMenu();
-
-            if (parent != null)
-            {
-                parent.HideMenu();
-            }
+            onMenuOpened.Invoke();
         }
     }
 
     [ContextMenu("Close Menu")]
-    public void CloseMenu()
+    public void CloseMenu() => ForceCloseMenu(force: false);
+
+    public void ForceCloseMenu(bool force = false)
     {
-        if (isOpen) // Only close the menu if we are open
+        if (isOpen || force) // Only close the menu if we are open or if we force it
         {
             isOpen = false;
-            onMenuClosed.Invoke();
             HideMenu();
+            onMenuClosed.Invoke();
 
-            if (parent != null)
+            // Close all menus with this as its parent
+            foreach (var child in FindObjectsOfType<Menu>())
             {
-                parent.ShowMenu();
+                if (child.gameObject.activeInHierarchy && child.parent == this)
+                {
+                    child.CloseMenu();
+                }
             }
-
-            foreach (var child in FindObjectsOfType<Menu>().Where(m => m.parent = this))
-            {
-                child.CloseMenu();
-            }
-
         }
     }
 
@@ -104,7 +113,8 @@ public class Menu : MonoBehaviour
         }
     }
 
-    protected void SetSelectables(bool state)
+    // Set all ui elements in the menu be interactable or not
+    protected virtual void SetSelectables(bool state)
     {
         if (Selectables.Length > 0)
         {
