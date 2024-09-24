@@ -36,7 +36,7 @@ public class PlayerController : Actor
     #endregion
     #endregion
 
-    private float _landingJumpInputTimer = 0;
+    [ReadOnly] private float _landingJumpInputTimer = 0;
     public float LandingJumpInputTimer
     {
         get => _landingJumpInputTimer; set
@@ -52,7 +52,7 @@ public class PlayerController : Actor
         }
     }
 
-    private Vector3 _originalMoveDir = Vector3.zero;
+    [ReadOnly] private Vector3 _originalMoveDir = Vector3.zero;
 
     public override void Awake()
     {
