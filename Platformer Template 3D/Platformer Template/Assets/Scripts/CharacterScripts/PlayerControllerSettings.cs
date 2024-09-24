@@ -11,7 +11,7 @@ public class PlayerMovementSettings
     public float maxSpeed = 5;
 
     [Min(0), Tooltip("The amount of force applied upwards when jumping.")]
-    public int jumpForce = 5;
+    public int jumpForce = 15;
 }
 
 // This class holds all information about player looking
@@ -32,13 +32,19 @@ public class PlayerLookSettings
 
     [Tooltip("Enable this if you want the player to rotate with the mouse as well.")]
     public bool playerRotateWithCamera = false;
+
+    [Tooltip("Enable this to have the camera move to the mouse.")]
+    public bool cameraRotateWithMouse = false;
+
+    [ReadOnly]
+    public Vector2 lookDelta;
 }
 
 // this class holds all information about the player's ground detection
 [Serializable]
 public class PlayerGroundDetectionSettings
 {
-    public bool isGrounded;
+    [ReadOnly] public bool isGrounded;
 
     [Tooltip("Position is relative to the player. This is the starting line of the raycast, where it will draw from.")]
     public Vector3 groundCastPosition;

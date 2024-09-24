@@ -36,7 +36,7 @@ public class PlayerController : Actor
     #endregion
     #endregion
 
-    [ReadOnly] private float _landingJumpInputTimer = 0;
+    private float _landingJumpInputTimer = 0;
     public float LandingJumpInputTimer
     {
         get => _landingJumpInputTimer; set
@@ -52,7 +52,7 @@ public class PlayerController : Actor
         }
     }
 
-    [ReadOnly] private Vector3 _originalMoveDir = Vector3.zero;
+    [ReadOnly, SerializeField] private Vector3 _originalMoveDir = Vector3.zero;
 
     public override void Awake()
     {
@@ -106,6 +106,15 @@ public class PlayerController : Actor
         LandingJumpInputTimer -= Time.fixedDeltaTime;
     }
 
+    // Non-Physics-related code, such as timers or checks should be executed in Update as FixedUpdate is reserved for physics
+    public void Update()
+    {
+        if (_lookSettings.cameraRotateWithMouse)
+        {
+            Look(_lookSettings.lookDelta);
+        }
+    }
+
     private void Jump()
     {
         LandingJumpInputTimer = 0;
@@ -146,8 +155,10 @@ public class PlayerController : Actor
     #region Looking
     public void LookControl(InputAction.CallbackContext context)
     {
-        Vector2 delta = context.ReadValue<Vector2>();
-
+        _lookSettings.lookDelta = context.ReadValue<Vector2>();
+    }
+    public void Look(Vector2 delta)
+    {
         if (_lookSettings.lookTarget == null)
         {
             Debug.LogError("You must set a Look target for camera movement to function.");
