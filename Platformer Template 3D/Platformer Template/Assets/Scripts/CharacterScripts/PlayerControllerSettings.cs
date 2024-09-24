@@ -19,35 +19,35 @@ public class PlayerMovementSettings
 public class PlayerLookSettings
 {
     [Tooltip("This is the target for looking that is attached to the player. This will allow the cinemachine camera to rotate around.")]
-    public Transform _lookTarget;
+    public Transform lookTarget;
 
     [Min(0), Tooltip("The amount of rotation power the looking has.")]
-    public float _rotationPower = 0.01f;
+    public float rotationPower = 0.01f;
 
     [Range(0, 90), Tooltip("The greatest vertical angle allowed to look down.")]
-    public float _maxLookDownAngle = 40;
+    public float maxLookDownAngle = 40;
 
     [Range(-90, 0), Tooltip("The greatest vertical angle allowed to look up.")]
-    public float _maxLookUpAngle = -40;
+    public float maxLookUpAngle = -40;
 
     [Tooltip("Enable this if you want the player to rotate with the mouse as well.")]
-    public bool _playerRotateWithCamera = false;
+    public bool playerRotateWithCamera = false;
 }
 
 // this class holds all information about the player's ground detection
 [Serializable]
 public class PlayerGroundDetectionSettings
 {
-    public bool _isGrounded;
+    public bool isGrounded;
 
     [Tooltip("Position is relative to the player. This is the starting line of the raycast, where it will draw from.")]
-    public Vector3 _groundCastPosition;
+    public Vector3 groundCastPosition;
 
     [Tooltip("Position is relative to the Cast Position. This is the ending lin of the raycast, where it will draw to.")]
-    public Vector3 _groundCastLength;
+    public Vector3 groundCastLength;
 
     [Tooltip("The player will be able to jump off any colliders in the selected layer(s).")]
-    public LayerMask _groundLayer;
+    public LayerMask groundLayer;
 }
 
 // This class holds all information about the player controls
@@ -55,11 +55,11 @@ public class PlayerGroundDetectionSettings
 public class PlayerControlSettings
 {
     [Tooltip("A Constant force component that will only be activated while moving down.")]
-    public ConstantForce _fallingGravityForce;
+    public ConstantForce fallingGravityForce;
 
     [Min(0), Tooltip("The amount of time in seconds the game will still accept a jump input before touching the ground.")]
-    public float _landingJumpInputTime = 0.1f;
+    public float landingJumpInputTime = 0.1f;
 
     [Tooltip("This is a toggle for if you want players jump height to be tied to how long they hold the button for.")]
-    public bool _holdForHigherJumps = true;
+    public bool holdForHigherJumps = true;
 }
