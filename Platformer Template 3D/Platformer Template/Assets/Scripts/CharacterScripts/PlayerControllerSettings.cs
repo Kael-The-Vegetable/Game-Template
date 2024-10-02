@@ -30,8 +30,14 @@ public class PlayerLookSettings
     [Range(-90, 0), Tooltip("The greatest vertical angle allowed to look up.")]
     public float maxLookUpAngle = -40;
 
+    [Tooltip("Enable this to have mouseUp be associated with 'looking up'.")]
+    public bool planeYControls = false;
+
     [Tooltip("Enable this if you want the player to rotate with the mouse as well.")]
     public bool playerRotateWithCamera = false;
+
+    [Range(0, 1), Tooltip("This value alters the easing of the camera if it was rotated around the player then the playerRotateWithCamera was turned on.")]
+    public float cameraLerp;
 
     [Tooltip("Enable this to have the camera move to the mouse.")]
     public bool cameraRotateWithMouse = false;

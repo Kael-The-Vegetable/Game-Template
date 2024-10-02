@@ -112,6 +112,17 @@ public class PlayerController : Actor
         if (_lookSettings.cameraRotateWithMouse)
         {
             Look(_lookSettings.lookDelta);
+            if (_lookSettings.playerRotateWithCamera)
+            {
+                _lookSettings.lookTarget.localEulerAngles = new Vector3(
+                    _lookSettings.lookTarget.localEulerAngles.x,
+                    Mathf.LerpAngle(
+                        _lookSettings.lookTarget.localEulerAngles.y,
+                        0, _lookSettings.cameraLerp),
+                    Mathf.LerpAngle(
+                        _lookSettings.lookTarget.localEulerAngles.z,
+                        0, _lookSettings.cameraLerp));
+            }
         }
     }
 
@@ -175,7 +186,14 @@ public class PlayerController : Actor
             _lookSettings.lookTarget.rotation *= Quaternion.AngleAxis(delta.x * _lookSettings.rotationPower, Vector3.up);
         }
 
-        _lookSettings.lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _lookSettings.rotationPower, Vector3.right);
+        if (_lookSettings.planeYControls)
+        {
+            _lookSettings.lookTarget.rotation *= Quaternion.AngleAxis(-delta.y * _lookSettings.rotationPower, Vector3.right);
+        }
+        else
+        {
+            _lookSettings.lookTarget.rotation *= Quaternion.AngleAxis(delta.y * _lookSettings.rotationPower, Vector3.right);
+        }
 
         //clamp the up/down axis
         Vector3 angles = _lookSettings.lookTarget.eulerAngles;
