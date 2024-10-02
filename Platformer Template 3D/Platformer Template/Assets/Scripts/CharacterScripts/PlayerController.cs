@@ -9,13 +9,14 @@ public class PlayerController : Actor
     // Serialized simply means that the field will be shown in the inspector. Fields that are public will automatically be shown, without the need for the [SerializeField] attribute.
     // #region allows you to collapse a section of code by clicking the arrow to the left of it.
     #region Serailized Fields
-    [SerializeField, Space] private PlayerMovementSettings _movementSettings = new();
-
-    [SerializeField, Space] private PlayerLookSettings _lookSettings = new();
-
-    [SerializeField, Space] private PlayerGroundDetectionSettings _groundDetectionSettings = new();
-
-    [SerializeField, Space] private PlayerControlSettings _controlSettings = new();
+    [Space]
+    [SerializeField] private PlayerMovementSettings _movementSettings = new();
+    [Space]
+    [SerializeField] private PlayerLookSettings _lookSettings = new();
+    [Space]
+    [SerializeField] private PlayerGroundDetectionSettings _groundDetectionSettings = new();
+    [Space]
+    [SerializeField] private PlayerControlSettings _controlSettings = new();
 
     #region Debug Settings
     [Header("Debug Settings")]

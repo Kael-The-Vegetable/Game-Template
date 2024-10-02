@@ -145,6 +145,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "UI",
+            "id": "4e63ec0f-f669-45ee-ac21-e3ec625c94ff",
+            "actions": [
+                {
+                    "name": "Pause/Exit",
+                    "type": "Button",
+                    "id": "254423b2-2115-4a21-b855-2ca7b3cf4c3b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2eb1d6d8-7fe2-4633-b777-91bd821c2afe",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Pause/Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
