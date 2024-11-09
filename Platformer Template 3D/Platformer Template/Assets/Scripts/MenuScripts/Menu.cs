@@ -7,19 +7,19 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-    private Selectable[] selectables;
+    private Selectable[] _selectables;
     protected Selectable[] Selectables
     {
         get
         {
-            if (selectables == null || selectables.Length == 0 || selectables.Contains(null))
+            if (_selectables == null || _selectables.Length == 0 || _selectables.Contains(null))
             {
-                selectables = GetComponentsInChildren<Selectable>();
+                _selectables = GetComponentsInChildren<Selectable>();
             }
-            return selectables;
+            return _selectables;
         }
 
-        private set => selectables = value;
+        private set => _selectables = value;
     }
 
     [Tooltip("If a parent menu is set, this menu will be closed when the parent is.")]

@@ -2174,7 +2174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 0}
-  isOpen: 0
+  isOpen: 1
   onMenuOpened:
     m_PersistentCalls:
       m_Calls: []
@@ -2458,7 +2458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 1473048869}
-  isOpen: 0
+  isOpen: 1
   onMenuOpened:
     m_PersistentCalls:
       m_Calls: []
