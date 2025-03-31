@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// asdfghjkltredfv
+/// This is a player controller class.
 /// </summary>
 public class PlayerController : Actor
 {
@@ -41,6 +41,10 @@ public class PlayerController : Actor
     #endregion
 
     private float _landingJumpInputTimer = 0;
+
+    /// <summary>
+    ///  This grabs an input and lets jump inputs fire even if player is not on ground.
+    /// </summary>
     public float LandingJumpInputTimer
     {
         get => _landingJumpInputTimer; set
