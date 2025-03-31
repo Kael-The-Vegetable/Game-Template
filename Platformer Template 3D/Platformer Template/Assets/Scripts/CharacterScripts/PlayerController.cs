@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// This is a player controller class.
+/// </summary>
 public class PlayerController : Actor
 {
     // Serialized simply means that the field will be shown in the inspector. Fields that are public will automatically be shown, without the need for the [SerializeField] attribute.
